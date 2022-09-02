@@ -31,25 +31,26 @@ build() {
 
 run() {
   docker run \
-    --rm \
-    -v `pwd`/:/build/ \
+    --rm --detach -v $(pwd)/:/build/ \
     --platform linux/amd64 \
-    --entrypoint src/example1/entrypoint.sh \
+    -p 8100:8000 \
+    --entrypoint src/"${@}"/entrypoint.sh \
     cppcon/wasm
+  docker logs \
+    -f $(docker container ls | grep 'cppcon/wasm' | awk '{print $1}' | head -n 1)
 }
 
 console() {
   docker run \
-    --rm -it\
-    --platform linux/amd64 \
-    -v `pwd`/:/build/ \
+    --rm -it --platform linux/amd64 \
+    -v $(pwd)/:/build/ \
     --entrypoint /bin/bash \
-    cppcon/wasm \
+    cppcon/wasm
 }
 
-test() {
-  #  No test added for now
-  noop
+stop() {
+  docker stop \
+    $(docker container ls | grep 'cppcon/wasm' | awk '{print $1}' | xargs)
 }
 
 main() {
@@ -58,12 +59,12 @@ main() {
   elif [ "$1" = build ]; then
     build
   elif [ "$1" = run ]; then
-    run
+    shift
+    run "$@"
   elif [ "$1" = console ]; then
     console
-  elif [ "$1" = test ]; then
-    shift
-    test "$@"
+  elif [ "$1" = stop ]; then
+    stop
   else
     help
   fi

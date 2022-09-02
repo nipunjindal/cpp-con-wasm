@@ -27,6 +27,7 @@ build() {
   docker build \
     --platform linux/amd64 \
     -t cppcon/wasm:$VERSION .
+  mkdir output
 }
 
 run() {

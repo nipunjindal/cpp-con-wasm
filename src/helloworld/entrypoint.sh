@@ -1,4 +1,4 @@
 #!/bin/bash
 
-emcc src/helloworld/helloworld.cpp -o output/helloworld.html
+emcc -Os src/helloworld/helloworld.cpp -o output/helloworld.js
 node output/helloworld.js

@@ -30,12 +30,31 @@ build() {
 }
 
 run() {
-  docker run \
+  container=$(docker run \
     --rm --detach -v $(pwd)/:/build/ \
     --platform linux/amd64 \
     -p 8100:8000 \
     --entrypoint src/"${@}"/entrypoint.sh \
-    cppcon/wasm
+    cppcon/wasm)
+
+  # Our general exit handler
+  cleanup() {
+    err=$?
+    echo "Cleaning stuff up..."
+    docker stop "${container}"
+    trap '' EXIT INT TERM
+    exit $err
+  }
+
+  sig_cleanup() {
+    trap '' EXIT # some shells will call EXIT after the INT handler
+    cleanup
+    false # sets $?
+  }
+
+  trap cleanup EXIT
+  trap sig_cleanup INT QUIT TERM
+
   docker logs \
     -f $(docker container ls | grep 'cppcon/wasm' | awk '{print $1}' | head -n 1)
 }

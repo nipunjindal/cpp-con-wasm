@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<h1>The ride with WebAssembly, CppCon 2022!</h1>
+<label for="fibonacci_number">Find fibonacci of any number:</label>
+<input type="number" id="fibonacci_number" name="fibonacci_number">
+<button type="button" onclick="find_fibonacci()">Submit</button>
+<h3 id="cpp_results"></h3>
+<h3 id="js_results"></h3>
+<script>
+    // Let's make sure we have WebAssembly supported in browser!
+    if (!('WebAssembly' in window)) {
+        alert('you need a browser with wasm support enabled :(');
+    }
+
+
+    // Let's create a function called loadWebAssembly that converts given file into binary array buffer.
+    function loadWebAssembly(fileName) {
+        return fetch(fileName)
+            .then(response => response.arrayBuffer())
+            .then(buffer => WebAssembly.compile(buffer))
+            .then(module => {
+                const importObject = {
+                    env: {
+                        'memoryBase': 0,
+                        'tableBase': 0,
+                        'memory': new WebAssembly.Memory({initial: 256}),
+                        'table': new WebAssembly.Table({initial: 256, element: 'anyfunc'}),
+                        abort: alert,
+                    }
+                }
+                return new WebAssembly.Instance(module, importObject)
+            });
+    }
+
+    //We call the function for fibonacci.wasm
+    loadWebAssembly('fibonacci.wasm')
+        .then(instance => {
+            fibc = instance.exports._Z3fibi;
+            console.log('Call your functions !');
+        });
+
+    // Function written in Javascript for nth fibonacci 
+    function fibj(n) {
+        if (n <= 1)
+            return n;
+        return fibj(n - 1) + fibj(n - 2);
+    }
+
+    //This function gives the time required for C++ function
+    function perfoc(n) {
+        const startTime = performance.now()
+        const c = fibc(n)
+        const endTime = performance.now()
+        console.log(`Calculating nth Fibonacci with WASM took ${endTime - startTime} milliseconds,nth fibonacci is ${c}`)
+        return endTime - startTime;
+    }
+
+    // This function gives the time required for Javascript function
+    function perfoj(n) {
+        const startTime = performance.now()
+        const j = fibj(n)
+        const endTime = performance.now()
+        console.log(`Calculating nth Fibonacci with JS took ${endTime - startTime} milliseconds, nth fibonacci is ${j}`)
+        return endTime - startTime;
+    }
+
+    function find_fibonacci() {
+        const n = parseInt(document.getElementById('fibonacci_number').value)
+        const cTime = perfoc(n)
+        document.getElementById('cpp_results').textContent = `Cpp took ${cTime} milliseconds`
+        const jTime = perfoj(n)
+        document.getElementById('js_results').textContent = `JS took ${jTime} milliseconds`
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+@import url(https://fonts.googleapis.com/css?family=Caladea);
+
+* {
+    font-family: 'Caladea', sans-serif;
+}
+
+#page-title {
+    text-align: center;
+}
+
+ul li {
+    font-size: 30px;
+}

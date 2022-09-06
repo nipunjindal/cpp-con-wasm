@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cppcon22</title>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <script type="text/javascript">
+        var Module = {
+            onRuntimeInitialized: function () {
+                console.log('Module loaded: ', Module);
+
+                // Create Logger Object
+                window.logger_obj = new Module.Logger()
+            }
+        };
+
+        function log(message) {
+            const msg = `[${new Date().toGMTString()}]: ${message}`
+            window.logger_obj.logMessage(msg)
+        }
+    </script>
+    <script src="sample-logger-threading.js"></script>
+</head>
+<body>
+<h1 id='page-title'>
+    Sample for Logger with threading!
+</h1>
+</body>
+</html>

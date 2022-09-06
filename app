@@ -10,10 +10,9 @@ help() {
   echo "Commands:"
   echo "clean     Destroy all existing dependencies and compiled assets."
   echo "build     Build and install all dependencies from scratch."
-  echo "start     Start the application stack."
+  echo "run       Start the application stack."
   echo "stop      Stop the application stack."
   echo "console   Start an interactive console."
-  echo "test      Run tests "
   echo
 }
 
@@ -32,37 +31,17 @@ build() {
 
 run() {
   container=$(docker run \
-    --rm --detach -v $(pwd)/:/build/ \
+    --rm -v $(pwd)/:/build/ \
     --platform linux/amd64 \
-    -p 8100:8000 \
-    --entrypoint src/"${@}"/entrypoint.sh \
+    -p 8000:8000 \
+    --entrypoint entrypoint.sh \
     cppcon/wasm)
-
-  # Our general exit handler
-  cleanup() {
-    err=$?
-    echo "Cleaning stuff up..."
-    docker stop "${container}"
-    trap '' EXIT INT TERM
-    exit $err
-  }
-
-  sig_cleanup() {
-    trap '' EXIT # some shells will call EXIT after the INT handler
-    cleanup
-    false # sets $?
-  }
-
-  trap cleanup EXIT
-  trap sig_cleanup INT QUIT TERM
-
-  docker logs \
-    -f $(docker container ls | grep 'cppcon/wasm' | awk '{print $1}' | head -n 1)
 }
 
 console() {
   docker run \
     --rm -it --platform linux/amd64 \
+    -p 8000:8000 \
     -v $(pwd)/:/build/ \
     --entrypoint /bin/bash \
     cppcon/wasm

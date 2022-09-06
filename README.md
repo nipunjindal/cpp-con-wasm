@@ -6,7 +6,7 @@ This repo sets up all the working examples being taught in the session.
 
 ### One time setup
 ```
-TBD install docker stesp
+brew install --cask docker
 ```
 
 Build the docker with following command:
@@ -18,4 +18,8 @@ Build the docker with following command:
 Run any example with following command:
 ```
 ./app run <example>
+```
+
+```
+/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --args --enable-features=SharedArrayBuffer
 ```

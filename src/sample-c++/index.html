@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cppcon22</title>
+  <link rel="stylesheet" type="text/css" href="styles.css"/>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <script type="text/javascript">
+    var Module = {
+      onRuntimeInitialized: function() {
+        console.log('Module loaded: ', Module);
+
+        // Create CppClass object
+        cpp_class_obj = new Module.CppClass(100)
+        console.log("cpp_class_obj: CppClass called class object member variable ", cpp_class_obj.member);
+
+        // Create TemplateCppClass object
+        template_cpp_class_obj = new Module.IntTemplateCppClass(100, 200, 300)
+        console.log("template_cpp_class_obj: CppClass called class object member function ", template_cpp_class_obj.getMember(2));
+
+        // Create Logger Object
+        logger_obj = new Module.Logger()
+      }
+    };
+  </script>
+  <script src="sample-c++.js"></script>
+</head>
+<body>
+<h1 id='page-title'>
+  Sample for C++ constructs interfacing!
+</h1>
+</body>
+</html>

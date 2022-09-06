@@ -16,9 +16,10 @@ String.fromCharCode.apply(null, FS.readFile('/data/logs'))
 EM_JS(void, setupFS, (), {
     FS.mkdir('/data');
     FS.mount(IDBFS, {}, '/data');
+    FS.syncfs(true, function(err) {});
 });
 
-EM_JS(void, syncFS, (), { FS.syncfs(function(){console.log("Synced")}); });
+EM_JS(void, syncFS, (), { FS.syncfs(function(err){console.log("Synced", err)}); });
 
 EM_JS(void, js_add_label, (const char* text), {
     const jsString = UTF8ToString(text);
@@ -36,10 +37,12 @@ class Logger {
 
    private:
     void _log(const std::string& str) {
-        const auto fileName = "/data/logs";
-        std::ofstream of(fileName, std::ofstream::app);
-        of << str;
-        of << ", ";
+        {
+            const auto fileName = "/data/logs";
+            std::ofstream of(fileName, std::ofstream::app);
+            of << str;
+            of << ", ";
+        }
         syncFS();
 
         js_add_label(str.c_str());

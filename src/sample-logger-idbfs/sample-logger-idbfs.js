@@ -1153,8 +1153,8 @@ var tempI64;
 var ASM_CONSTS = {
   
 };
-function setupFS() { FS.mkdir('/data'); FS.mount(IDBFS, {}, '/data'); }
-function syncFS() { FS.syncfs(function(){console.log("Synced")}); }
+function setupFS() { FS.mkdir('/data'); FS.mount(IDBFS, {}, '/data'); FS.syncfs(true, function(err) {}); }
+function syncFS() { FS.syncfs(function(err){console.log("Synced", err)}); }
 function js_add_label(text) { const jsString = UTF8ToString(text); console.log(jsString); const node = document.createElement("h2"); node.innerHTML = jsString; document.getElementsByTagName("body")[0].appendChild(node); }
 
 
@@ -6841,7 +6841,7 @@ var dynCall_iiiiijj = Module["dynCall_iiiiijj"] = createExportWrapper("dynCall_i
 var dynCall_iiiiiijj = Module["dynCall_iiiiiijj"] = createExportWrapper("dynCall_iiiiiijj");
 
 var ___start_em_js = Module['___start_em_js'] = 16188;
-var ___stop_em_js = Module['___stop_em_js'] = 16519;
+var ___stop_em_js = Module['___stop_em_js'] = 16562;
 
 
 

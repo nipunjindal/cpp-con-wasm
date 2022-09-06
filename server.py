@@ -1,25 +1,25 @@
 from operator import itemgetter
 from bottle import get, post, request, run, static_file
 
-leaderboard = []
+logs = []
 
 
 @post("/log/")
 def add_log():
     log = request.body.read().decode("utf-8")
     print(log)
-    leaderboard.append(log)
+    logs.append(log)
 
 
 @get("/logs")
-def get_leaderboard():
-    print(leaderboard)
-    return ", ".join(leaderboard)
+def get_logs():
+    print(logs)
+    return ", ".join(logs)
 
 
 @get("/delete")
-def delete_leaderboard():
-    leaderboard.clear()
+def delete_logs():
+    logs.clear()
 
 
 @get("/")

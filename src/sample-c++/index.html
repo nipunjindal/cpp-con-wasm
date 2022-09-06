@@ -11,15 +11,27 @@
         console.log('Module loaded: ', Module);
 
         // Create CppClass object
-        cpp_class_obj = new Module.CppClass(100)
+        cpp_class_obj = new Module.CppClass(100);
         console.log("cpp_class_obj: CppClass called class object member variable ", cpp_class_obj.member);
 
         // Create TemplateCppClass object
-        template_cpp_class_obj = new Module.IntTemplateCppClass(100, 200, 300)
+        template_cpp_class_obj = new Module.IntTemplateCppClass(100, 200, 300);
         console.log("template_cpp_class_obj: CppClass called class object member function ", template_cpp_class_obj.getMember(2));
 
-        // Create Logger Object
-        logger_obj = new Module.Logger()
+        // Create unique pointer Logger Object
+        unique_logger_obj = new Module.unique_ptr_logger();
+        unique_logger_obj.logMessage("Create unique ptr");
+        // Deleting the JS reference
+        console.log("Deleting JS reference");
+        unique_logger_obj.delete();
+
+        // Create unique pointer Logger Object
+        first_shared_logger_obj = new Module.Logger();
+        first_shared_logger_obj.logMessage("Created shared ptr");
+        // ref increased
+        second_shared_logger_obj = first_shared_logger_obj.clone();
+        // // Deleting the JS reference
+        first_shared_logger_obj.delete();
       }
     };
   </script>

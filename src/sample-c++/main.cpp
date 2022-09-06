@@ -66,7 +66,7 @@ EMSCRIPTEN_BINDINGS(cppcon22) {
         .function("getMember", &TemplateCppClass<int>::getMember);
 
     emscripten::class_<Logger>("Logger")
-        .smart_ptr_constructor<std::shared_ptr<Logger>>(
+        .smart_ptr<std::shared_ptr<Logger>>(
             "Logger", &std::make_shared<Logger>)
         .function("logMessage", &Logger::logMessage);
 
